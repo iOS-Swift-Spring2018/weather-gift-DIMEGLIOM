@@ -2,12 +2,20 @@
 //  DetailVC.swift
 //  WeatherGift
 //
-//  Created by Mark on 3/25/18.
+//  Created by Mark on 3/14/18.
 //  Copyright © 2018 Mark. All rights reserved.
 //
 
 import UIKit
 import CoreLocation
+
+private let dateFormatter: DateFormatter = {
+    let dateFormatter = DateFormatter()
+   dateFormatter.dateFormat = "EEEE, MM dd, y"
+    print("%% DateFormatter created in detail VC")
+    return dateFormatter
+
+}()
 
 class DetailVC: UIViewController {
     
@@ -52,7 +60,7 @@ class DetailVC: UIViewController {
         
         let location = locationsArray[currentPage]
         locationLabel.text = location.name
-        let dateString = formatTimeForTimeZone(unixDate: location.currentTime, timeZone: location.timeZone)
+        let dateString = location.currentTime.format(timeZone: location.timeZone, dateFormatter: dateFormatter)
         temperatureLabel.text = location.currentTemperature
         summaryLabel.text = location.currentSummary
         currentImage.image = UIImage(named: location.currentIcon)
@@ -63,8 +71,8 @@ class DetailVC: UIViewController {
     func formatTimeForTimeZone(unixDate: TimeInterval, timeZone: String) -> String {
         
         let usableDate = Date(timeIntervalSince1970: unixDate)
-        var dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEE, MMM, dd, y"
+//        var dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "EEE, MMM, dd, y"
         dateFormatter.timeZone = TimeZone(identifier : timeZone)
         let dateString = dateFormatter.string(from: usableDate)
         
@@ -158,7 +166,10 @@ extension DetailVC: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DayWeatherCell", for: indexPath) as! DayWeatherCell
        let dailyForecast =  locationsArray[currentPage].dailyForecastArray[indexPath.row]
-        cell.update(with: dailyForecast)
+        let timeZone = locationsArray[currentPage].timeZone
+        
+        
+        cell.update(with: dailyForecast, timeZone: timeZone)
         
     return cell
     

@@ -99,7 +99,7 @@ class WeatherLocation {
                     let minTemp = json["daily"]["data"][day]["temperatureLow"].doubleValue
                     let dateValue = json["daily"]["data"][day]["time"].doubleValue
                     let icon = json["daily"]["data"][day]["icon"].stringValue
-                    let dailySummary = json["daily"]["data"][day]["icon"].stringValue
+                    let dailySummary = json["daily"]["data"][day]["summary"].stringValue
                 
                     let newDailyForecast = DailyForecast(dailyMaxTemp: maxTemp, dailyMinTemp: minTemp, dailySummary: dailySummary, dailyDate: dateValue, dailyIcon: icon)
                     self.dailyForecastArray.append(newDailyForecast)
